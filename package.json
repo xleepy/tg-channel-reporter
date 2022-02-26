@@ -1,0 +1,29 @@
+{
+  "name": "tg-chat-reporter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src/ -d dist",
+    "start": "npm run build && node dist/index.js"
+  },
+  "bin": {
+    "tg-channel-reporter": "./dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "airgram": "^5.0.0",
+    "dotenv": "^16.0.0",
+    "prompt": "^1.2.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
+    "eslint": "^8.10.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4"
+  }
+}
