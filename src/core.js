@@ -59,7 +59,9 @@ export default async () => {
           },
           text: reason,
         });
-        console.log(response);
+        console.log(
+          `${link} - ${response._ === 'error' ? `${response.code} - ${response.message}` : 'ok'}`
+        );
       } catch (err) {
         console.log(err);
       }

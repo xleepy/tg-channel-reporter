@@ -6,7 +6,8 @@ import { readChannelsFile } from './utils';
 (async () => {
   const { reportChat } = await app();
 
-  const allChannels = await readChannelsFile();
+  const filePath = process.argv[2];
+  const allChannels = await readChannelsFile(filePath);
 
   if (allChannels.length === 0) {
     const { links } = await prompt.get(['links']);
@@ -22,7 +23,7 @@ import { readChannelsFile } from './utils';
     { default: 'chatReportReasonViolence', name: 'type' },
   ]);
 
-  allChannels.forEach((link) => {
-    reportChat(link, reason, type);
-  });
+  await Promise.all(allChannels.map((link) => reportChat(link, reason, type)));
+
+  process.kill(process.pid, 'SIGTERM');
 })();
