@@ -10,7 +10,7 @@ import { readChannelsFile } from './utils';
 
   if (allChannels.length === 0) {
     const { links } = await prompt.get(['links']);
-    allChannels.push(links.split(',').map((link) => link.trim()) ?? []);
+    allChannels.push(...(links?.split(',').map((link) => link.trim()) ?? []));
   }
 
   const { reason, type } = await prompt.get([
