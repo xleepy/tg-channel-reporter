@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 import app from './core';
 import prompt from 'prompt';
-import { readChannelsFile } from './utils';
+import { readChannelsFile, checkTelegramChannelPattern } from './utils';
 
 (async () => {
   const { reportChat } = await app();
@@ -11,7 +11,12 @@ import { readChannelsFile } from './utils';
 
   if (allChannels.length === 0) {
     const { links } = await prompt.get(['links']);
-    allChannels.push(...(links?.split(',').map((link) => link.trim()) ?? []));
+    allChannels.push(
+      ...(links
+        ?.split(',')
+        .map((link) => link.trim())
+        .filter(checkTelegramChannelPattern) ?? [])
+    );
   }
 
   const { reason, type } = await prompt.get([
