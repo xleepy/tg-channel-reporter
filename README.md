@@ -11,10 +11,16 @@ API_ID= -- your id --
 
 API_HASH= -- your hash --
 
+Script will ask phone number, code and additionally password if you haven't got password just enter empty string
+All password and user data stored only locally on in folder in `db` folder. 
+
 ### To run from folder:
+- npm install
 - npm run start
 - follow cli
+- additionally you can provide path to file by running command `npm run start /path/to/file`
 ### To run this from everywhere run:
+- npm install
 - npm run build
 - npm install -g
 
