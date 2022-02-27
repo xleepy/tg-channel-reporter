@@ -45,7 +45,7 @@ export default class Telegram {
           resolve();
           clearInterval(intervalId);
         }
-      });
+      }, 100);
     });
   }
 
