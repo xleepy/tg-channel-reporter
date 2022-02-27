@@ -9,6 +9,9 @@ add as key=value format to .env
 API_ID=<your id>
 API_HASH=<your hash>
 
+### To run from folder:
+- npm run start
+- follow cli
 ### To run this from everywhere run:
 - npm run build
 - npm install -g
