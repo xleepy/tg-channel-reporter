@@ -2,3 +2,4 @@
 /db/
 /dist/
 .env
+./channels.txt

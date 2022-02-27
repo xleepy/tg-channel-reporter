@@ -1,10 +1,11 @@
 #! /usr/bin/env node
-import app from './core';
+import Telegram from './core';
 import prompt from 'prompt';
 import { readChannelsFile, checkTelegramChannelPattern } from './utils';
 
 (async () => {
-  const { reportChat } = await app();
+  const app = new Telegram();
+  await app.init();
 
   const filePath = process.argv[2];
   const allChannels = await readChannelsFile(filePath);
@@ -28,7 +29,7 @@ import { readChannelsFile, checkTelegramChannelPattern } from './utils';
     { default: 'chatReportReasonViolence', name: 'type' },
   ]);
 
-  await Promise.all(allChannels.map((link) => reportChat(link, reason, type)));
+  await Promise.all(allChannels.map((link) => app.reportChat(link, reason, type)));
 
   process.kill(process.pid, 'SIGTERM');
 })();
