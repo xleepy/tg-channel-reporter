@@ -2,5 +2,5 @@
 /db/
 /dist/
 .env
-./channels.txt
+channels.txt
 /tdlib/
