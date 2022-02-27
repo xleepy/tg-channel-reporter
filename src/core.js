@@ -1,30 +1,17 @@
 import { Airgram, Auth } from 'airgram';
 import prompt from 'prompt';
 import dotenv from 'dotenv';
-import { saveToFile } from './utils';
 
-const { API_ID, API_HASH, TDLIB_COMMAND, BOT_STARTED } = dotenv.config().parsed ?? {};
+const { API_ID, API_HASH, TDLIB_COMMAND } = dotenv.config().parsed ?? {};
 
 const init = () => {
-  let apiId = API_ID;
-  let apiHash = API_HASH;
-  if (!apiId || !apiHash) {
-    prompt.get(['apiId', 'apiHash'], (err, result) => {
-      if (!result.apiId || !result.apiHash) {
-        throw Error(
-          'Please create app_id by following https://core.telegram.org/api/obtaining_api_id'
-        );
-      }
-      apiId = result.appId;
-      apiHash = result.apiHash;
-      saveToFile('API_HASH', apiHash);
-      saveToFile('API_ID', apiId);
-    });
+  if (!API_ID || !API_HASH) {
+    throw Error('Please create app_id by following https://core.telegram.org/api/obtaining_api_id');
   }
 
   const airgram = new Airgram({
-    apiId,
-    apiHash,
+    apiId: API_ID,
+    apiHash: API_HASH,
     command: TDLIB_COMMAND,
     logVerbosityLevel: 1,
     useChatInfoDatabase: true,
@@ -45,6 +32,7 @@ const init = () => {
       return code;
     },
   });
+
   airgram.use(auth);
 
   return airgram.api;
@@ -55,62 +43,9 @@ export default async () => {
 
   const getChatId = async (link) => {
     const { response } = await app.searchPublicChat({
-      username: '@raw_data_bot',
+      username: link.startsWith('@') ? link : link.split('/').at(-1),
     });
-
-    const chatId = response.id;
-    if (!BOT_STARTED) {
-      await app.sendBotStartMessage({
-        chatId,
-      });
-      saveToFile('BOT_STARTED', 'true');
-    }
-
-    await app.sendMessage({
-      chatId,
-      inputMessageContent: {
-        '@type': 'inputMessageText',
-        text: {
-          text: link,
-        },
-      },
-    });
-
-    const { response: chatHistoryResp } = await app.getChatHistory({
-      chatId,
-      limit: 2,
-    });
-    const lastMessage = (chatHistoryResp.messages ?? []).at(-1);
-
-    if (!lastMessage) {
-      console.log('Not found');
-      return;
-    }
-
-    const data = lastMessage.content.text.text
-      .split('\n')
-      .filter((text) => text.includes('id') || text.includes('@'));
-
-    if (data.length === 0) {
-      console.log('Data not found');
-      return;
-    }
-
-    const [name, idEntry = ''] = data;
-    const [, chatIdToReport] = idEntry.split(':');
-    if (!chatIdToReport) {
-      console.log('Id not found');
-      return;
-    }
-
-    const publicChat = await app.searchPublicChat({
-      username: name,
-    });
-
-    console.log(publicChat);
-    console.log(chatIdToReport);
-
-    return Number(chatIdToReport);
+    return response.id;
   };
 
   return {
@@ -124,7 +59,7 @@ export default async () => {
           },
           text: reason,
         });
-        console.log(`${response.code}-${response.message}`);
+        console.log(response);
       } catch (err) {
         console.log(err);
       }
