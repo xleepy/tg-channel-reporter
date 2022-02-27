@@ -7,7 +7,6 @@ import { readChannelsFile } from './utils';
   const { reportChat } = await app();
 
   const allChannels = await readChannelsFile();
-  console.log(allChannels);
 
   if (allChannels.length === 0) {
     const { links } = await prompt.get(['links']);

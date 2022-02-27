@@ -15,3 +15,10 @@ API_HASH=<your hash>
 
 Acceptable format
 url => firstlink, secondLink, etc...
+
+
+TDlib already included you don't need to compile it i think
+
+### Additional notes:
+Default filename is `channels.txt`
+If file doesn't exists then script will ask you to provide urls through CLI
