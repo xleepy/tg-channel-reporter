@@ -53,12 +53,19 @@ export default class Telegram {
     const { response } = await this.airgram.api.searchPublicChat({
       username: link.startsWith('@') ? link : link.split('/').at(-1),
     });
+    if (response._ === 'error') {
+      console.log(`${link} -> ${response.code} - ${response.message}`);
+      return null;
+    }
     return response.id;
   }
 
   async reportChat(link, reason = '', type = 'chatReportReasonViolence') {
     try {
       const chatId = await this.getChatId(link);
+      if (!chatId) {
+        return;
+      }
       const { response } = await this.airgram.api.reportChat({
         chatId,
         reason: {
