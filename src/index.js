@@ -1,12 +1,19 @@
 #! /usr/bin/env node
 import app from './core';
 import prompt from 'prompt';
+import { readChannelsFile } from './utils';
 
 (async () => {
   const { reportChat } = await app();
 
-  const { link, reason, type } = await prompt.get([
-    'link',
+  const allChannels = await readChannelsFile();
+
+  if (allChannels.length === 0) {
+    const { links } = await prompt.get(['links']);
+    allChannels.push(...(links?.split(',').map(link => link.trim()) ?? []));
+  }
+
+  const { reason, type } = await prompt.get([
     {
       name: 'reason',
       default:
@@ -15,8 +22,7 @@ import prompt from 'prompt';
     { default: 'chatReportReasonViolence', name: 'type' },
   ]);
 
-  const allLinks = link.split(',') ?? [];
-  allLinks.forEach((link) => {
-    reportChat(link.trim(), reason, type);
+  allChannels.forEach(link => {
+    reportChat(link, reason, type);
   });
 })();
