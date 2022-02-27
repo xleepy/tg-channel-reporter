@@ -12,7 +12,7 @@ API_ID= -- your id --
 API_HASH= -- your hash --
 
 Script will ask phone number, code and additionally password if you haven't got password just enter empty string
-All password and user data stored only locally on in folder in `db` folder. 
+All password and user data stored only locally on in folder in `db` folder.
 
 ### To run from folder:
 - npm install
@@ -27,9 +27,7 @@ All password and user data stored only locally on in folder in `db` folder.
 Acceptable format
 url => firstlink, secondLink, etc...
 
-
-TDlib already included you don't need to compile it i think.
-But recompilation will be needed anyway. Will not work on windows systems.
+You need to build tdlib manually
 Instructions for tdlib build
 https://tdlib.github.io/td/build.html?language=JavaScript
 Then replace current folder
