@@ -29,7 +29,15 @@ import { readChannelsFile, checkTelegramChannelPattern } from './utils';
     { default: 'chatReportReasonViolence', name: 'type' },
   ]);
 
-  await Promise.all(allChannels.map((link) => app.reportChat(link, reason, type)));
+  const delayedReport = (link) =>
+    new Promise((resolve) =>
+      setTimeout(async () => {
+        await app.reportChat(link, reason, type);
+        resolve();
+      }, 1000)
+    );
+
+  await Promise.all(allChannels.map(delayedReport));
 
   process.kill(process.pid, 'SIGTERM');
 })();
