@@ -20,13 +20,14 @@ import { readChannelsFile, checkTelegramChannelPattern, chunk } from './utils';
     );
   }
 
-  const { reason, type } = await prompt.get([
+  const { reason, type, requestsCount } = await prompt.get([
     {
       name: 'reason',
       default:
         'There are a lot of posts with threats against the Ukrainian military.  Many photographs of the dead, blood and weapons.  Block it!',
     },
     { default: 'chatReportReasonViolence', name: 'type' },
+    { name: 'requestsCount', description: 'Number of requests per second', default: 5 },
   ]);
 
   const delayedReport = (multiplier = 1) => {
@@ -40,19 +41,23 @@ import { readChannelsFile, checkTelegramChannelPattern, chunk } from './utils';
     };
   };
 
-  const chunks = chunk(allChannels, 15);
+  const chunks = chunk(allChannels, Number(requestsCount));
 
-  let counter = 1;
+  const [firstPart, secondPart] = chunk(chunks, chunks.length / 2);
+
+  const createDelayedPromise =
+    (increment = 0) =>
+    (chunk, idx) => {
+      const delayMultiplier = idx + 1 + increment;
+      console.log(`channels list part will run minimum after ${delayMultiplier} second:`, chunk);
+      return chunk.map(delayedReport(delayMultiplier));
+    };
+
   // create for each chunk delay with incremental idx to reduce occurrence of timeout issue
-  const chunksPromises = chunks.flatMap((chunk) => {
-    if (counter > 5) {
-      counter = 1;
-    }
-    console.log(`channels list part will run minimum after ${counter} second:`, chunk);
-    return chunk.map(delayedReport(counter++));
-  });
+  const firstChunkPromises = firstPart.flatMap(createDelayedPromise());
+  const secondChunkPromises = secondPart.flatMap(createDelayedPromise(2));
 
-  await Promise.all(chunksPromises);
+  await Promise.all([...firstChunkPromises, ...secondChunkPromises]);
 
   process.kill(process.pid, 'SIGTERM');
 })();
