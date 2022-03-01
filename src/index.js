@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 import Telegram from './core';
 import prompt from 'prompt';
-import { readChannelsFile, checkTelegramChannelPattern } from './utils';
+import { readChannelsFile, checkTelegramChannelPattern, chunk } from './utils';
 
 (async () => {
   const app = new Telegram();
@@ -29,15 +29,23 @@ import { readChannelsFile, checkTelegramChannelPattern } from './utils';
     { default: 'chatReportReasonViolence', name: 'type' },
   ]);
 
-  const delayedReport = (link) =>
-    new Promise((resolve) =>
-      setTimeout(async () => {
-        await app.reportChat(link, reason, type);
-        resolve();
-      }, 1000)
-    );
+  const delayedReport = (multiplier = 1) => {
+    return (link) => {
+      return new Promise((resolve) =>
+        setTimeout(async () => {
+          await app.reportChat(link, reason, type);
+          resolve();
+        }, 1000 * multiplier)
+      );
+    };
+  };
 
-  await Promise.all(allChannels.map(delayedReport));
+  const chunks = chunk(allChannels, 5);
+
+  // create for each chunk delay with incremental idx to reduce occurrence of timeout issue
+  const chunksPromises = chunks.flatMap((chunk, idx) => chunk.map(delayedReport(idx + 1)));
+
+  await Promise.all(chunksPromises);
 
   process.kill(process.pid, 'SIGTERM');
 })();

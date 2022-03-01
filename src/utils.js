@@ -19,3 +19,17 @@ export const readChannelsFile = async (fileName = 'channels.txt') => {
     return [];
   }
 };
+
+// Poor mans lodash chunk https://github.com/lodash/lodash/blob/4.17.15/lodash.js#L6839
+export function chunk(array = [], size = 0) {
+  const length = array.length;
+  if (length === 0 || size === 0) {
+    return [];
+  }
+  let index = 0;
+  const chunkArray = Array(Math.ceil(length / size));
+  for (let resIndex = 0; resIndex < length - 1; resIndex++) {
+    chunkArray[resIndex] = array.slice(index, (index += size));
+  }
+  return chunkArray.filter((chunk) => chunk.length > 0);
+}

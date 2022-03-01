@@ -42,8 +42,8 @@ export default class Telegram {
       this.airgram.use(auth);
       const intervalId = setInterval(() => {
         if (auth.isAuthorized) {
-          resolve();
           clearInterval(intervalId);
+          resolve();
         }
       }, 100);
     });
