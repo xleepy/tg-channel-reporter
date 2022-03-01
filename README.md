@@ -19,21 +19,25 @@ All password and user data stored only locally on in folder in `db` folder.
 - npm run start
 - follow cli
 - additionally you can provide path to file by running command `npm run start /path/to/file`
+- file path or channels not provided, script will ask you to provide channels manually in format
+firstlink, secondLink, etc...
 ### To run this from everywhere run:
 - npm install
 - npm run build
 - npm install -g
 
-Acceptable format
-url => firstlink, secondLink, etc...
-
+### TDlib
 You need to build tdlib manually
+
 Instructions for tdlib build
 https://tdlib.github.io/td/build.html?language=JavaScript
+
 Then replace current folder
 
 Tested on macOS node 16.13.2
 
 ### Additional notes:
 Default filename is `channels.txt`
-If file doesn't exists then script will ask you to provide urls through CLI
+
+I'll try to find a way how to create executable with all dependencies already bundled together so i hope in future everyone who wants to use that script can skip library compilation step.
+
