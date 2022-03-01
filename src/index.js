@@ -35,15 +35,22 @@ import { readChannelsFile, checkTelegramChannelPattern, chunk } from './utils';
         setTimeout(async () => {
           await app.reportChat(link, reason, type);
           resolve();
-        }, 1000 * multiplier)
+        }, 1000 * 60 * multiplier)
       );
     };
   };
 
-  const chunks = chunk(allChannels, 5);
+  const chunks = chunk(allChannels, 15);
 
+  let counter = 1;
   // create for each chunk delay with incremental idx to reduce occurrence of timeout issue
-  const chunksPromises = chunks.flatMap((chunk, idx) => chunk.map(delayedReport(idx + 1)));
+  const chunksPromises = chunks.flatMap((chunk) => {
+    if (counter > 5) {
+      counter = 1;
+    }
+    console.log(`channels list part will run minimum after ${counter} second:`, chunk);
+    return chunk.map(delayedReport(counter++));
+  });
 
   await Promise.all(chunksPromises);
 
