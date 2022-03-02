@@ -29,7 +29,11 @@ export function chunk(array = [], size = 0) {
   let index = 0;
   const chunkArray = Array(Math.ceil(length / size));
   for (let resIndex = 0; resIndex < length - 1; resIndex++) {
-    chunkArray[resIndex] = array.slice(index, (index += size));
+    const chunkToAppend = array.slice(index, (index += size));
+    if (chunkToAppend.length === 0) {
+      break;
+    }
+    chunkArray[resIndex] = chunkToAppend;
   }
-  return chunkArray.filter((chunk) => chunk.length > 0);
+  return chunkArray;
 }
