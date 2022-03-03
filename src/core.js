@@ -23,7 +23,7 @@ export default class Telegram {
   }
 
   async init() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const auth = new Auth({
         phoneNumber: async () => {
           const { phone_number } = await prompt.get('phone_number');

@@ -15,7 +15,7 @@ import { readChannelsFile, checkTelegramChannelPattern, chunk } from './utils';
     allChannels.push(
       ...(links
         ?.split(',')
-        .map((link) => link.trim())
+        .map(link => link.trim())
         .filter(checkTelegramChannelPattern) ?? [])
     );
   }
@@ -31,8 +31,8 @@ import { readChannelsFile, checkTelegramChannelPattern, chunk } from './utils';
   ]);
 
   const delayedReport = (multiplier = 1) => {
-    return (link) => {
-      return new Promise((resolve) =>
+    return link => {
+      return new Promise(resolve =>
         setTimeout(async () => {
           await app.reportChat(link, reason, type);
           resolve();

@@ -5,7 +5,7 @@ export const saveToFile = (key, value) => {
   return fs.appendFile(path.resolve('.env'), `${key}=${value}`);
 };
 
-export const checkTelegramChannelPattern = (line) => {
+export const checkTelegramChannelPattern = line => {
   return line.length > 0 && (line.startsWith('https://t.me') || line.startsWith('@'));
 };
 
